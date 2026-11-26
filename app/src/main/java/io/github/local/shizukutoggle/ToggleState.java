@@ -26,13 +26,14 @@ final class ToggleState {
 
     void observe(Actual value, long now) {
         actual = value;
+        // A late matching reply updates reality, but must not revive an expired operation.
+        expire(now);
         if (pending != null && ((pending == Command.START && value == Actual.RUNNING)
                 || (pending == Command.STOP && value == Actual.STOPPED))) {
             pending = null;
             deadline = 0;
             notice = null;
         }
-        expire(now);
     }
 
     void restore(Command command, long deadline, long now) {

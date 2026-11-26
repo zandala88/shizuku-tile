@@ -3,6 +3,8 @@ package io.github.local.shizukutoggle;
 import android.app.Activity;
 import android.app.StatusBarManager;
 import android.content.ComponentName;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Insets;
@@ -24,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public final class MainActivity extends Activity {
@@ -32,6 +35,9 @@ public final class MainActivity extends Activity {
     private ImageView statusIcon;
     private ProgressBar statusProgress;
     private LinearLayout authDetails;
+    private Switch closeUsbSwitch;
+    private LinearLayout usbPermissionHelp;
+    private boolean updatingUsbSwitch;
     private int ink, muted, accent, surface, soft, outline, onAccent;
     private final Runnable observer = this::render;
 
@@ -123,6 +129,55 @@ public final class MainActivity extends Activity {
         add(guide, guideRow("1", "点按磁贴", "自动切换启动与停止"), 18);
         add(guide, guideRow("2", "圆环旋转时稍等", "正在执行，完成后自动恢复"), 16);
         add(content, guide, 16);
+
+        LinearLayout stopSettings = card();
+        TextView stopTitle = text("停止行为", 15, ink);
+        stopTitle.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        stopSettings.addView(stopTitle);
+        LinearLayout usbRow = row();
+        LinearLayout usbLabels = column();
+        usbLabels.addView(text("同时关闭 USB 调试", 15, ink));
+        add(usbLabels, text("确认停止后关闭，USB ADB 将断开", 12, muted), 6);
+        usbRow.addView(usbLabels, new LinearLayout.LayoutParams(0, -2, 1));
+        closeUsbSwitch = new Switch(this);
+        closeUsbSwitch.setId(R.id.close_usb_on_stop);
+        closeUsbSwitch.setContentDescription("停止 Shizuku 时同时关闭 USB 调试");
+        closeUsbSwitch.setMinimumHeight(dp(48));
+        closeUsbSwitch.setShowText(false);
+        LinearLayout.LayoutParams switchParams = new LinearLayout.LayoutParams(-2, -2);
+        switchParams.leftMargin = dp(12);
+        usbRow.addView(closeUsbSwitch, switchParams);
+        add(stopSettings, usbRow, 14);
+        closeUsbSwitch.setChecked(controller.closeUsbOnStop());
+        closeUsbSwitch.setOnCheckedChangeListener((button, checked) -> {
+            if (updatingUsbSwitch) return;
+            if (!controller.setCloseUsbOnStop(checked)) {
+                updatingUsbSwitch = true;
+                closeUsbSwitch.setChecked(controller.closeUsbOnStop());
+                updatingUsbSwitch = false;
+                Toast.makeText(this, "请先通过 ADB 完成 USB 调试控制授权", Toast.LENGTH_LONG).show();
+            }
+        });
+        usbPermissionHelp = column();
+        usbPermissionHelp.setId(R.id.usb_permission_help);
+        add(usbPermissionHelp, text("此选项需要一次 ADB 授权。连接电脑后执行：", 12, muted), 16);
+        TextView grantCommand = text(UsbDebugging.GRANT_COMMAND, 12, muted);
+        grantCommand.setTypeface(Typeface.MONOSPACE);
+        grantCommand.setTextIsSelectable(true);
+        add(usbPermissionHelp, grantCommand, 8);
+        Button copyGrant = button("复制授权命令", false);
+        copyGrant.setId(R.id.copy_usb_grant);
+        copyGrant.setOnClickListener(view -> {
+            ClipboardManager clipboard = getSystemService(ClipboardManager.class);
+            if (clipboard != null) {
+                clipboard.setPrimaryClip(ClipData.newPlainText("ADB 授权命令", UsbDebugging.GRANT_COMMAND));
+                Toast.makeText(this, "授权命令已复制", Toast.LENGTH_SHORT).show();
+            }
+        });
+        add(usbPermissionHelp, copyGrant, 12);
+        stopSettings.addView(usbPermissionHelp);
+        usbPermissionHelp.setVisibility(controller.canControlUsb() ? View.GONE : View.VISIBLE);
+        add(content, stopSettings, 16);
 
         LinearLayout authCard = card();
         LinearLayout authHeader = row();
@@ -230,6 +285,10 @@ public final class MainActivity extends Activity {
         statusDetail.setText(detailText(view));
         statusDetail.setTextColor(view.needsAttention && !busy ? getColor(R.color.app_error) : muted);
         authBadge.setText(view.configured ? "已配置" : "待配置");
+        updatingUsbSwitch = true;
+        closeUsbSwitch.setChecked(controller.closeUsbOnStop());
+        updatingUsbSwitch = false;
+        usbPermissionHelp.setVisibility(controller.canControlUsb() ? View.GONE : View.VISIBLE);
     }
 
     static String detailText(ShizukuController.ViewState view) {

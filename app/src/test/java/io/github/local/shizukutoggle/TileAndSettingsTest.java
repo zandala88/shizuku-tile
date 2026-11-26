@@ -4,6 +4,7 @@ import android.service.quicksettings.Tile;
 import android.widget.EditText;
 import android.view.View;
 import org.junit.Test;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -15,6 +16,9 @@ import static org.junit.Assert.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 35)
 public class TileAndSettingsTest {
+    @Before public void isolateApplicationSingleton() {
+        org.robolectric.util.ReflectionHelpers.setStaticField(ShizukuController.class, "instance", null);
+    }
     @Test public void commandErrorsRemainVisibleWithKnownRunningOrStoppedService() {
         for (ToggleState.Actual actual : new ToggleState.Actual[]{ToggleState.Actual.RUNNING, ToggleState.Actual.STOPPED}) {
             ToggleState state = new ToggleState();

@@ -4,6 +4,15 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ToggleStateTest {
+    @Test public void lateStopConfirmationStillReportsTimeoutAndUpdatesActualStatus() {
+        ToggleState state = new ToggleState();
+        state.observe(ToggleState.Actual.RUNNING, 0);
+        state.begin(true, 0);
+        state.observe(ToggleState.Actual.STOPPED, 60_001);
+        assertEquals(ToggleState.Actual.STOPPED, state.actual());
+        assertNull(state.pending());
+        assertTrue(state.message().contains("超时"));
+    }
     @Test public void stoppedStartsButDoesNotBecomeRunningUntilObserved() {
         ToggleState state = new ToggleState();
         state.observe(ToggleState.Actual.STOPPED, 100);
