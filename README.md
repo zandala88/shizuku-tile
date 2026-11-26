@@ -10,7 +10,10 @@ Android 8.0 及以上，无第三方运行时依赖，无网络、无障碍、ro
 
 ## 使用
 
-1. 将提供的 APK 传到手机并安装。
+从 [GitHub Releases](https://github.com/zandala88/shizuku-tile/releases/latest) 下载 Assets 中的 `ShizukuTile-版本号.apk`。
+公开安装包不预填私人授权码，首次使用需复制 Shizuku 的 `auth` 到应用中保存。
+
+1. 将下载的 APK 传到手机并安装，填写并保存授权码。
 2. 打开“Shizuku 磁贴”，点击“添加 Shizuku 磁贴”；旧系统在快捷设置的编辑界面手动拖入。
 3. 点按磁贴切换启停。运行时亮起，停止时熄灭；操作中显示旋转圆环和等待文字，重复点按不会重复发送命令。
 4. 长按磁贴打开设置。如果 Shizuku 的授权码变更，只需更新 auth 一项。
@@ -35,7 +38,8 @@ adb shell pm grant io.github.local.shizukutoggle android.permission.WRITE_SECURE
 外部关闭 Shizuku、启动操作、停止超时和广播失败均不触发此动作。
 如果停止期间取消开关，将取消尚未执行的 USB 关闭；中途开启只对下一次停止生效。
 
-个人安装包已预置本次提供的 auth。源码分发不包含个人授权码和签名私钥；自行编译时可在安装后填写。
+聊天中提供过的个人安装包曾预填 auth，GitHub Releases 公开包不含该信息。
+从预填版覆盖安装后若提示未配置，请重新填写并保存一次。源码分发不包含个人授权码和签名私钥。
 
 ## 兼容范围
 
