@@ -3,7 +3,8 @@
 一个原生 Android 小应用，用一个快捷设置磁贴启动、停止 Shizuku，替代 MacroDroid。
 Android 8.0 及以上，无第三方运行时依赖，无网络、无障碍、root 或通知权限申请。
 
-1.2.1 使用 Shizuku 上游图标及相近的靛蓝配色，支持浅色、深色和系统主题图标。
+1.2.2 将桌面图标改为黑白版本以区别原应用，磁贴使用 Shizuku 图形，启停时保留旋转等待效果。
+界面保持相近的靛蓝配色，支持浅色、深色和系统主题图标。
 图标来源与 Apache 2.0 许可保存在 [third_party/shizuku](third_party/shizuku/NOTICE)，也随 APK 打包。
 本应用是独立的磁贴控制工具，仍需安装支持启停广播的 Shizuku。
 

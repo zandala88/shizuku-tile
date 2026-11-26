@@ -4,15 +4,16 @@ Source: https://github.com/RikkaApps/Shizuku
 Revision: b844bc491f1790c72328e1a8e5b2349f8978f0ea
 License: Apache License 2.0 (see LICENSE in this directory).
 
-Copied icon assets:
-- manager/src/main/res/mipmap-{hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher.png
-- manager/src/main/res/mipmap-{hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher_background.png
-- manager/src/main/res/mipmap-{hdpi,xhdpi,xxhdpi,xxxhdpi}/ic_launcher_foreground.png
+Copied icon asset:
 - manager/src/main/res/drawable/ic_monochrome.xml
   (resource filename here: ic_shizuku_monochrome.xml)
 
-The adaptive-icon wrapper maps the monochrome resource to its local filename.
-The monochrome icon data and PNG assets are unchanged.
+The original monochrome vector data is unchanged. Local derivatives:
+- ic_launcher_foreground.xml: white tint for a black/white launcher icon.
+- ic_launcher_background.xml: local charcoal background.
+- ic_launcher.xml: adaptive wrapper referencing the above local resources.
+- ic_tile.xml: white paths and a centered viewport for the Quick Settings icon.
+The earlier copied color PNG assets are no longer included as of v1.2.2.
 Light primary #3F51B5 and dark primary #B1B8DF come from
 manager/src/main/res/values/colors.xml; surrounding surface colors are local adaptations.
 
