@@ -74,10 +74,7 @@ public final class MainActivity extends Activity {
 
         LinearLayout header = row();
         ImageView logo = new ImageView(this);
-        logo.setImageResource(R.drawable.ic_tile);
-        logo.setImageTintList(ColorStateList.valueOf(accent));
-        logo.setPadding(dp(13), dp(13), dp(13), dp(13));
-        logo.setBackground(shape(soft, 18, false));
+        logo.setImageResource(R.mipmap.ic_launcher);
         header.addView(logo, new LinearLayout.LayoutParams(dp(52), dp(52)));
         LinearLayout heading = column();
         TextView title = text("Shizuku", 29, ink);

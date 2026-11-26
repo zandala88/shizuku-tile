@@ -17,11 +17,12 @@ android {
         applicationId = "io.github.local.shizukutoggle"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.2.0"
+        versionCode = 4
+        versionName = "1.2.1"
         buildConfigField("String", "INITIAL_AUTH_TOKEN", "\"$initialToken\"")
     }
     buildFeatures { buildConfig = true }
+    sourceSets.getByName("main").assets.srcDir(rootProject.file("third_party"))
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
