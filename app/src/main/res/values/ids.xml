@@ -1,0 +1,8 @@
+<resources>
+    <item name="auth_input" type="id" />
+    <item name="save_auth" type="id" />
+    <item name="add_tile" type="id" />
+    <item name="status_text" type="id" />
+    <item name="auth_details" type="id" />
+    <item name="auth_header" type="id" />
+</resources>
